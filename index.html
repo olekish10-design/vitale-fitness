@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0A0A0E">
+<meta name="mobile-web-app-capable" content="yes">
+<title>VITALÉ — Fitness & Nutrition</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0E;--s1:#121216;--s2:#1A1A20;--s3:#24242C;--acc:#E8553A;--acc2:#2CB67D;--acc3:#7F5AF0;--acc4:#FFD369;--tx:#EAEAEA;--txd:#8A8A96;--txm:#50505C;--brd:#222230;--font:'Outfit',sans-serif;--serif:'Playfair Display',serif;--safe-b:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none}
+body{font-family:var(--font);background:var(--bg);color:var(--tx);min-height:100dvh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{display:none}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:var(--s3);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--acc);cursor:pointer;box-shadow:0 0 10px rgba(232,85,58,.4)}
+button{font-family:var(--font);cursor:pointer;border:none;background:none;color:var(--tx);-webkit-user-select:none;user-select:none}
+button:active{transform:scale(.97)}
+img{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.app{max-width:430px;margin:0 auto;position:relative;padding-bottom:calc(72px + var(--safe-b));min-height:100dvh}
+.header{padding:20px 20px 8px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;background:rgba(10,10,14,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.logo{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:3px;color:var(--acc)}
+.tag{font-size:10px;color:var(--txm);letter-spacing:2px;margin-top:2px;text-transform:uppercase}
+.lang-btn{border:1px solid var(--brd)!important;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;color:var(--txd);letter-spacing:1px}
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(10,10,14,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;justify-content:space-around;padding:6px 0 calc(10px + var(--safe-b));border-top:1px solid var(--brd);z-index:100}
+.tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:400;color:var(--txm);padding:6px 16px;transition:color .2s;position:relative}
+.tb.on{color:var(--acc);font-weight:600}
+.tb.on::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--acc);border-radius:1px}
+.tb svg{width:22px;height:22px}
+.page{padding:0 16px 16px;min-height:72vh}
+.card{background:var(--s1);border-radius:20px;padding:22px;border:1px solid var(--brd)}
+.csm{background:var(--s1);border-radius:14px;padding:16px;border:1px solid var(--brd)}
+.hid{display:none!important}
+.fi{animation:fi .35s ease-out both}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<div class="header">
+<div><div class="logo">VITALÉ</div><div class="tag" id="tg"></div></div>
+<button class="lang-btn" id="lb" onclick="tl()"></button>
+</div>
+<div class="page" id="pg"></div>
+<div class="tab-bar" id="bar"></div>
+</div>
+<script>
+let ln='ru',tb='calc',fm={g:'m',age:25,wt:70,ht:175,act:'mod',gl:'keep'},res=null,ml='bk',cr=null,wg='lose',wd=null;
+const T={ru:{app:"VITALÉ",tg:"Питание · Движение · Баланс",tabs:{calc:"Норма",food:"Еда",train:"Спорт"},gn:{m:"М",f:"Ж"},age:"Возраст",wt:"Вес, кг",ht:"Рост, см",act:{l:"Активность",sed:"Минимум",light:"Лёгкая",mod:"Средняя",high:"Высокая",ext:"Макс"},gl:{lose:"Сушка",keep:"Баланс",gain:"Масса"},go:"Рассчитать",dl:"Суточная норма",kc:"ккал",p:"Белки",f:"Жиры",c:"Углеводы",g:"г",ms:{bk:"Завтраки",ln:"Обеды",dn:"Ужины",sn:"Перекусы"},ing:"Ингредиенты",hw:"Как готовить",tm:"мин",sv:"порц.",gs:{lose:"Похудение",keep:"Тонус",gain:"Масса"},dy:"День",rs:"отдых",sc:"с",wu:"Разминка",mn:"Основа",cd:"Заминка",df:{e:"Легко",m:"Средне",h:"Тяжело"},sw:"EN",rp:"повт",ex:"упр."},en:{app:"VITALÉ",tg:"Nutrition · Movement · Balance",tabs:{calc:"Calories",food:"Food",train:"Train"},gn:{m:"M",f:"F"},age:"Age",wt:"Weight, kg",ht:"Height, cm",act:{l:"Activity",sed:"Sedentary",light:"Light",mod:"Moderate",high:"Active",ext:"Extreme"},gl:{lose:"Cut",keep:"Maintain",gain:"Bulk"},go:"Calculate",dl:"Daily Intake",kc:"kcal",p:"Protein",f:"Fats",c:"Carbs",g:"g",ms:{bk:"Breakfast",ln:"Lunch",dn:"Dinner",sn:"Snacks"},ing:"Ingredients",hw:"Method",tm:"min",sv:"serv.",gs:{lose:"Fat Loss",keep:"Tone",gain:"Muscle"},dy:"Day",rs:"rest",sc:"s",wu:"Warm-up",mn:"Workout",cd:"Cool-down",df:{e:"Easy",m:"Medium",h:"Hard"},sw:"RU",rp:"reps",ex:"ex."}};
+const R={bk:[{n:{ru:"Овсянка с ягодами",en:"Berry Oatmeal"},im:"https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=400&h=300&fit=crop",k:340,p:12,f:13,c:44,t:10,s:1,i:{ru:["Овсянка — 80г","Молоко — 200мл","Черника — 50г","Миндаль — 20г","Мёд — 10г"],en:["Oats — 80g","Milk — 200ml","Blueberries — 50g","Almonds — 20g","Honey — 10g"]},h:{ru:["Залить хлопья молоком, варить 5 мин","Добавить ягоды","Посыпать миндалём, полить мёдом"],en:["Cook oats in milk 5 min","Add berries","Top with almonds & honey"]}},{n:{ru:"Авокадо-тост с яйцом",en:"Avocado Egg Toast"},im:"https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",k:410,p:18,f:24,c:30,t:8,s:1,i:{ru:["Яйца — 2","Авокадо — 75г","Тост — 1","Масло — 5мл","Черри — 30г"],en:["Eggs — 2","Avocado — 75g","Toast — 1","Oil — 5ml","Cherry tomatoes — 30g"]},h:{ru:["Размять авокадо на тосте","Пожарить яйца","Подать с черри"],en:["Mash avocado on toast","Fry eggs","Serve with tomatoes"]}},{n:{ru:"Творожные панкейки",en:"Cottage Cheese Pancakes"},im:"https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",k:290,p:24,f:6,c:36,t:15,s:2,i:{ru:["Творог — 200г","Банан — 1","Яйцо — 1","Мука — 40г"],en:["Cottage cheese — 200g","Banana — 1","Egg — 1","Flour — 40g"]},h:{ru:["Смешать блендером","Жарить по 2 мин с каждой стороны"],en:["Blend all","Cook 2 min each side"]}},{n:{ru:"Смузи-боул",en:"Smoothie Bowl"},im:"https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400&h=300&fit=crop",k:320,p:10,f:11,c:48,t:5,s:1,i:{ru:["Банан замороженный — 1","Шпинат — 30г","Молоко — 100мл","Гранола — 40г","Киви — 1"],en:["Frozen banana — 1","Spinach — 30g","Milk — 100ml","Granola — 40g","Kiwi — 1"]},h:{ru:["Пробить блендером","Украсить гранолой и киви"],en:["Blend","Top with granola & kiwi"]}},{n:{ru:"Сырники с малиной",en:"Cheese Fritters"},im:"https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=400&h=300&fit=crop",k:310,p:20,f:10,c:35,t:20,s:2,i:{ru:["Творог — 250г","Яйцо — 1","Мука — 30г","Малина — 80г"],en:["Cottage cheese — 250g","Egg — 1","Flour — 30g","Raspberries — 80g"]},h:{ru:["Смешать, сформировать, обжарить","Малину прогреть для соуса"],en:["Mix, shape, fry","Heat raspberries for sauce"]}}],
+ln:[{n:{ru:"Курица с киноа",en:"Chicken Quinoa Bowl"},im:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",k:470,p:42,f:12,c:46,t:30,s:1,i:{ru:["Грудка — 180г","Киноа — 80г","Брокколи — 100г","Морковь — 50г"],en:["Chicken — 180g","Quinoa — 80g","Broccoli — 100g","Carrot — 50g"]},h:{ru:["Варить киноа 15 мин","Обжарить грудку","Овощи на пару"],en:["Cook quinoa 15 min","Sear chicken","Steam veggies"]}},{n:{ru:"Боул с лососем",en:"Salmon Bowl"},im:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop",k:510,p:34,f:20,c:48,t:25,s:1,i:{ru:["Лосось — 150г","Рис — 80г","Огурец — 60г","Авокадо — 50г","Соевый соус — 15мл"],en:["Salmon — 150g","Rice — 80g","Cucumber — 60g","Avocado — 50g","Soy sauce — 15ml"]},h:{ru:["Отварить рис","Запечь лосось 12 мин","Собрать боул"],en:["Cook rice","Bake salmon 12 min","Assemble"]}},{n:{ru:"Тыквенный суп",en:"Pumpkin Soup"},im:"https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=400&h=300&fit=crop",k:280,p:7,f:12,c:36,t:35,s:2,i:{ru:["Тыква — 400г","Картофель — 100г","Сливки — 100мл","Чеснок — 2 зуб."],en:["Pumpkin — 400g","Potato — 100g","Cream — 100ml","Garlic — 2"]},h:{ru:["Варить 20 мин","Пюрировать","Добавить сливки"],en:["Boil 20 min","Blend","Add cream"]}},{n:{ru:"Паста с индейкой",en:"Turkey Pasta"},im:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop",k:450,p:35,f:10,c:55,t:20,s:1,i:{ru:["Паста — 80г","Фарш индейки — 150г","Шпинат — 60г","Помидоры — 100г","Пармезан — 15г"],en:["Pasta — 80g","Turkey — 150g","Spinach — 60g","Tomatoes — 100g","Parmesan — 15g"]},h:{ru:["Отварить пасту","Обжарить фарш","Добавить овощи, смешать"],en:["Cook pasta","Brown turkey","Add veggies, toss"]}},{n:{ru:"Салат с нутом",en:"Chickpea Salad"},im:"https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop",k:380,p:16,f:20,c:35,t:10,s:1,i:{ru:["Нут — 120г","Огурец — 80г","Помидор — 100г","Фета — 50г","Маслины — 30г"],en:["Chickpeas — 120g","Cucumber — 80g","Tomato — 100g","Feta — 50g","Olives — 30g"]},h:{ru:["Нарезать овощи","Смешать всё","Заправить маслом"],en:["Chop veggies","Mix all","Dress with oil"]}}],
+dn:[{n:{ru:"Стейк из индейки",en:"Turkey Steak"},im:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",k:370,p:38,f:13,c:22,t:20,s:1,i:{ru:["Индейка — 200г","Фасоль — 120г","Перец — 80г"],en:["Turkey — 200g","Beans — 120g","Pepper — 80g"]},h:{ru:["Гриль по 5 мин","Фасоль на пару"],en:["Grill 5 min each","Steam beans"]}},{n:{ru:"Запечённая треска",en:"Baked Cod"},im:"https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop",k:330,p:32,f:14,c:18,t:30,s:1,i:{ru:["Треска — 180г","Кабачок — 100г","Помидор — 80г","Лимон — ¼"],en:["Cod — 180g","Zucchini — 100g","Tomato — 80g","Lemon — ¼"]},h:{ru:["На фольгу, овощи вокруг","Запекать 25 мин при 190°C"],en:["On foil, veggies around","Bake 25 min at 190°C"]}},{n:{ru:"Курица терияки",en:"Teriyaki Chicken"},im:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop",k:400,p:36,f:10,c:40,t:25,s:1,i:{ru:["Курица — 180г","Соевый соус — 20мл","Мёд — 10г","Рис — 80г"],en:["Chicken — 180g","Soy sauce — 20ml","Honey — 10g","Rice — 80g"]},h:{ru:["Обжарить курицу","Полить соусом","Подать с рисом"],en:["Pan-fry chicken","Pour sauce","Serve with rice"]}},{n:{ru:"Рагу с чечевицей",en:"Lentil Stew"},im:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop",k:310,p:18,f:8,c:42,t:35,s:2,i:{ru:["Чечевица — 100г","Морковь — 80г","Помидоры — 150г","Лук — 1"],en:["Lentils — 100g","Carrot — 80g","Tomatoes — 150g","Onion — 1"]},h:{ru:["Обжарить лук, морковь","Добавить чечевицу, варить 20 мин"],en:["Sauté onion, carrot","Add lentils, simmer 20 min"]}},{n:{ru:"Салат с тунцом",en:"Tuna Salad"},im:"https://images.unsplash.com/photo-1551248429-40975aa4de74?w=400&h=300&fit=crop",k:280,p:28,f:15,c:8,t:10,s:1,i:{ru:["Тунец — 120г","Яйца — 2","Огурец — 80г","Салат — 50г"],en:["Tuna — 120g","Eggs — 2","Cucumber — 80g","Lettuce — 50g"]},h:{ru:["Отварить яйца","Смешать на салате","Заправить маслом"],en:["Boil eggs","Mix on lettuce","Dress with oil"]}}],
+sn:[{n:{ru:"Энерго-шарики",en:"Energy Balls"},im:"https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400&h=300&fit=crop",k:180,p:8,f:10,c:16,t:15,s:6,i:{ru:["Овсянка — 60г","Арахисовая паста — 40г","Мёд — 20г","Какао — 10г"],en:["Oats — 60g","Peanut butter — 40g","Honey — 20g","Cocoa — 10g"]},h:{ru:["Смешать всё","Скатать шарики","Охладить 30 мин"],en:["Mix all","Roll balls","Chill 30 min"]}},{n:{ru:"Йогурт с орехами",en:"Yogurt & Nuts"},im:"https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop",k:200,p:14,f:10,c:16,t:3,s:1,i:{ru:["Йогурт — 150г","Орехи — 15г","Мёд — 10г"],en:["Yogurt — 150g","Walnuts — 15g","Honey — 10g"]},h:{ru:["Йогурт в миску","Посыпать, полить"],en:["Yogurt in bowl","Top & drizzle"]}},{n:{ru:"Хумус с овощами",en:"Hummus & Veggies"},im:"https://images.unsplash.com/photo-1481931098730-318b6f776db0?w=400&h=300&fit=crop",k:220,p:9,f:12,c:20,t:5,s:1,i:{ru:["Хумус — 80г","Морковь — 60г","Огурец — 60г","Сельдерей — 40г"],en:["Hummus — 80g","Carrot — 60g","Cucumber — 60g","Celery — 40g"]},h:{ru:["Нарезать палочками","Подать с хумусом"],en:["Cut sticks","Serve with hummus"]}}]};
+const W={lose:{n:{ru:"Похудение",en:"Fat Loss"},ic:"🔥",cl:"#E8553A",ds:[{d:1,n:{ru:"HIIT Всё тело",en:"Full Body HIIT"},du:40,df:"h",w:{ru:["Бег на месте — 3 мин","Прыжки — 2 мин"],en:["Jog — 3 min","Jumping jacks — 2 min"]},ex:[{n:{ru:"Берпи",en:"Burpees"},s:4,r:12,rs:45},{n:{ru:"Присед с прыжком",en:"Jump Squats"},s:4,r:15,rs:40},{n:{ru:"Скалолаз",en:"Climbers"},s:4,r:20,rs:30},{n:{ru:"Отжимания",en:"Push-ups"},s:3,r:15,rs:40},{n:{ru:"Планка",en:"Plank"},s:3,r:"60с/60s",rs:30}],c:{ru:["Растяжка — 2 мин"],en:["Stretch — 2 min"]}},{d:2,n:{ru:"Кардио-интервалы",en:"Cardio Intervals"},du:35,df:"h",w:{ru:["Лёгкий бег — 3 мин"],en:["Light jog — 3 min"]},ex:[{n:{ru:"Спринт",en:"Sprint"},s:5,r:"30с/30s",rs:20},{n:{ru:"Выпады с прыжком",en:"Jump Lunges"},s:4,r:12,rs:30},{n:{ru:"Бокс",en:"Shadow Boxing"},s:4,r:"40с/40s",rs:20},{n:{ru:"Присед у стены",en:"Wall Sit"},s:3,r:"45с/45s",rs:30}],c:{ru:["Дыхание — 1 мин"],en:["Breathing — 1 min"]}},{d:3,n:{ru:"Кор и пресс",en:"Core & Abs"},du:30,df:"m",w:{ru:["Кошка-корова — 1 мин"],en:["Cat-cow — 1 min"]},ex:[{n:{ru:"Скручивания",en:"Crunches"},s:4,r:20,rs:30},{n:{ru:"Велосипед",en:"Bicycle"},s:4,r:16,rs:30},{n:{ru:"Подъём ног",en:"Leg Raises"},s:3,r:15,rs:30},{n:{ru:"Боковая планка",en:"Side Plank"},s:3,r:"30с/30s",rs:20},{n:{ru:"Русский твист",en:"Russian Twist"},s:3,r:20,rs:30}],c:{ru:["Кобра — 30 сек"],en:["Cobra — 30 sec"]}},{d:4,n:{ru:"Низ тела",en:"Lower Body"},du:40,df:"h",w:{ru:["Приседания — 15","Махи ногами — 1 мин"],en:["Squats — 15","Leg swings — 1 min"]},ex:[{n:{ru:"Сумо-присед",en:"Sumo Squats"},s:4,r:15,rs:45},{n:{ru:"Выпады назад",en:"Reverse Lunges"},s:3,r:12,rs:40},{n:{ru:"Ягодичный мост",en:"Glute Bridge"},s:4,r:15,rs:30},{n:{ru:"Подъём на носки",en:"Calf Raises"},s:3,r:20,rs:25},{n:{ru:"Присед-пульс",en:"Pulse Squats"},s:3,r:20,rs:40}],c:{ru:["Растяжка ног — 2 мин"],en:["Leg stretch — 2 min"]}},{d:5,n:{ru:"Табата",en:"Tabata"},du:25,df:"h",w:{ru:["Прыжки — 2 мин"],en:["Jumps — 2 min"]},ex:[{n:{ru:"Берпи",en:"Burpees"},s:4,r:"20с/20s",rs:10},{n:{ru:"Прыжки в присед",en:"Squat Jumps"},s:4,r:"20с/20s",rs:10},{n:{ru:"Скалолаз",en:"Climbers"},s:4,r:"20с/20s",rs:10},{n:{ru:"Планка-прыжок",en:"Plank Jacks"},s:4,r:"20с/20s",rs:10}],c:{ru:["Поза ребёнка — 1 мин"],en:["Child's pose — 1 min"]}}]},
+keep:{n:{ru:"Тонус",en:"Tone"},ic:"⚡",cl:"#2CB67D",ds:[{d:1,n:{ru:"Верх тела",en:"Upper Body"},du:40,df:"m",w:{ru:["Вращения плечами — 1 мин"],en:["Shoulder circles — 1 min"]},ex:[{n:{ru:"Отжимания",en:"Push-ups"},s:4,r:12,rs:60},{n:{ru:"Обратные отжимания",en:"Dips"},s:3,r:12,rs:60},{n:{ru:"Планка с рукой",en:"Plank Raise"},s:3,r:10,rs:45},{n:{ru:"Алмазные отжимания",en:"Diamond Push-ups"},s:3,r:10,rs:60}],c:{ru:["Растяжка — 1 мин"],en:["Stretch — 1 min"]}},{d:2,n:{ru:"Низ тела",en:"Lower Body"},du:40,df:"m",w:{ru:["Ходьба — 2 мин"],en:["Walking — 2 min"]},ex:[{n:{ru:"Приседания",en:"Squats"},s:4,r:15,rs:60},{n:{ru:"Выпады",en:"Lunges"},s:3,r:12,rs:60},{n:{ru:"Ягодичный мост",en:"Glute Bridge"},s:4,r:15,rs:45},{n:{ru:"На носки",en:"Calf Raises"},s:3,r:20,rs:30}],c:{ru:["Растяжка — 1 мин"],en:["Stretch — 1 min"]}},{d:3,n:{ru:"Лёгкое кардио",en:"Easy Cardio"},du:30,df:"e",w:{ru:["Марш — 2 мин"],en:["March — 2 min"]},ex:[{n:{ru:"Шаги в сторону",en:"Lateral Steps"},s:3,r:20,rs:30},{n:{ru:"Подъём коленей",en:"High Knees"},s:3,r:"30с/30s",rs:30},{n:{ru:"Удары ногами",en:"Kicks"},s:3,r:16,rs:30},{n:{ru:"Степ-тач",en:"Step Touch"},s:3,r:"40с/40s",rs:20}],c:{ru:["Растяжка — 3 мин"],en:["Stretch — 3 min"]}},{d:4,n:{ru:"Функциональная",en:"Functional"},du:35,df:"m",w:{ru:["Прыжки — 1 мин"],en:["Jumps — 1 min"]},ex:[{n:{ru:"Присед-жим",en:"Squat Press"},s:3,r:12,rs:45},{n:{ru:"Тяга",en:"Row"},s:3,r:12,rs:45},{n:{ru:"Планка",en:"Plank"},s:3,r:"45с/45s",rs:30},{n:{ru:"Супермен",en:"Superman"},s:3,r:12,rs:30}],c:{ru:["Растяжка — 2 мин"],en:["Stretch — 2 min"]}},{d:5,n:{ru:"Йога",en:"Yoga"},du:30,df:"e",w:{ru:["Дыхание — 2 мин"],en:["Breathing — 2 min"]},ex:[{n:{ru:"Собака вниз",en:"Down Dog"},s:3,r:"30с/30s",rs:15},{n:{ru:"Воин I",en:"Warrior I"},s:3,r:"30с/30s",rs:15},{n:{ru:"Воин II",en:"Warrior II"},s:3,r:"30с/30s",rs:15},{n:{ru:"Дерево",en:"Tree"},s:3,r:"30с/30s",rs:15},{n:{ru:"Мост",en:"Bridge"},s:3,r:"30с/30s",rs:15}],c:{ru:["Шавасана — 3 мин"],en:["Savasana — 3 min"]}}]},
+gain:{n:{ru:"Масса",en:"Muscle"},ic:"💪",cl:"#7F5AF0",ds:[{d:1,n:{ru:"Грудь + Трицепс",en:"Chest & Tri"},du:50,df:"h",w:{ru:["Вращения — 1 мин","Отжимания от стены — 15"],en:["Circles — 1 min","Wall push-ups — 15"]},ex:[{n:{ru:"Жим гантелей",en:"DB Bench"},s:4,r:10,rs:90},{n:{ru:"Разводка",en:"DB Flyes"},s:3,r:12,rs:75},{n:{ru:"Широкие отжимания",en:"Wide Push-ups"},s:3,r:15,rs:60},{n:{ru:"Французский жим",en:"Skull Crushers"},s:3,r:12,rs:75},{n:{ru:"Разгибания",en:"Kickbacks"},s:3,r:12,rs:60}],c:{ru:["Растяжка — 1 мин"],en:["Stretch — 1 min"]}},{d:2,n:{ru:"Спина + Бицепс",en:"Back & Bi"},du:50,df:"h",w:{ru:["Кошка-корова — 1 мин"],en:["Cat-cow — 1 min"]},ex:[{n:{ru:"Тяга гантели",en:"DB Row"},s:4,r:10,rs:90},{n:{ru:"Подтягивания",en:"Pull-ups"},s:4,r:8,rs:90},{n:{ru:"Шраги",en:"Shrugs"},s:3,r:12,rs:60},{n:{ru:"Бицепс",en:"DB Curls"},s:4,r:10,rs:75},{n:{ru:"Молотки",en:"Hammers"},s:3,r:12,rs:60}],c:{ru:["Растяжка — 1 мин"],en:["Stretch — 1 min"]}},{d:3,n:{ru:"Ноги",en:"Legs"},du:55,df:"h",w:{ru:["Приседания — 15","Выпады — 10"],en:["Squats — 15","Lunges — 10"]},ex:[{n:{ru:"Гоблет-присед",en:"Goblet Squat"},s:4,r:12,rs:90},{n:{ru:"Румынская тяга",en:"Romanian DL"},s:4,r:10,rs:90},{n:{ru:"Выпады с весом",en:"DB Lunges"},s:3,r:12,rs:75},{n:{ru:"Жим ногами",en:"Leg Press"},s:3,r:15,rs:60},{n:{ru:"На носки с весом",en:"Calf Raises"},s:4,r:15,rs:45}],c:{ru:["Растяжка — 2 мин"],en:["Stretch — 2 min"]}},{d:4,n:{ru:"Плечи + Пресс",en:"Shoulders & Core"},du:45,df:"m",w:{ru:["Вращения — 1 мин"],en:["Circles — 1 min"]},ex:[{n:{ru:"Жим стоя",en:"Standing Press"},s:4,r:10,rs:75},{n:{ru:"Махи в стороны",en:"Lat Raises"},s:3,r:15,rs:60},{n:{ru:"Тяга к подбородку",en:"Upright Row"},s:3,r:12,rs:60},{n:{ru:"Скручивания",en:"Crunches"},s:4,r:20,rs:30},{n:{ru:"Планка",en:"Plank"},s:3,r:"60с/60s",rs:30}],c:{ru:["Растяжка — 1 мин"],en:["Stretch — 1 min"]}},{d:5,n:{ru:"Всё тело",en:"Full Body"},du:55,df:"h",w:{ru:["Бег — 2 мин","Растяжка — 2 мин"],en:["Jog — 2 min","Stretch — 2 min"]},ex:[{n:{ru:"Становая тяга",en:"DB Deadlift"},s:4,r:8,rs:120},{n:{ru:"Жим лёжа",en:"DB Bench"},s:4,r:10,rs:90},{n:{ru:"Тяга",en:"DB Row"},s:4,r:10,rs:90},{n:{ru:"Приседания",en:"Goblet Squat"},s:4,r:12,rs:90},{n:{ru:"Жим стоя",en:"Press"},s:3,r:10,rs:75}],c:{ru:["Полная растяжка — 3 мин"],en:["Full stretch — 3 min"]}}]}};
+const bk='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>';
+const ch='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".3"><path d="M9 18l6-6-6-6"/></svg>';
+
+function t2(){return T[ln]}
+function tl(){ln=ln==='ru'?'en':'ru';render()}
+function stb(id){tb=id;cr=null;wd=null;render()}
+
+function render(){
+  const t=t2();
+  document.getElementById('tg').textContent=t.tg;
+  document.getElementById('lb').textContent=t.sw;
+  // bar
+  document.getElementById('bar').innerHTML=[
+    {id:'calc',sv:'<path d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>'},
+    {id:'food',sv:'<path d="M12 3c-4.97 0-9 3.58-9 8h18c0-4.42-4.03-8-9-8zM3 13h18v1a4 4 0 01-4 4H7a4 4 0 01-4-4v-1zM3 20h18"/>'},
+    {id:'train',sv:'<rect x="2" y="7" width="3" height="10" rx="1"/><rect x="19" y="7" width="3" height="10" rx="1"/><path d="M5 12h14M8 7v10M16 7v10"/>'}
+  ].map(x=>`<button class="tb ${tb===x.id?'on':''}" onclick="stb('${x.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${x.sv}</svg><span>${t.tabs[x.id]}</span></button>`).join('');
+  // page
+  const pg=document.getElementById('pg');
+  if(tb==='calc')renderCalc(pg,t);
+  else if(tb==='food')cr?renderRecipeDetail(pg,t):renderFoodList(pg,t);
+  else if(tb==='train')wd?renderDayDetail(pg,t):renderTrainList(pg,t);
+}
+
+function renderCalc(pg,t){
+  const actKeys=['sed','light','mod','high','ext'];
+  const glKeys=['lose','keep','gain'];
+  const glCols={lose:'var(--acc)',keep:'var(--acc2)',gain:'var(--acc3)'};
+  pg.innerHTML=`<div class="fi"><div class="card" style="margin-top:12px">
+    <div style="display:flex;gap:10px;margin-bottom:18px">
+      <button class="gender-btn ${fm.g==='m'?'active':''}" style="${fm.g==='m'?'border-color:var(--acc)!important;background:var(--s2);color:var(--acc)':''}" onclick="fm.g='m';render()">${t.gn.m}</button>
+      <button class="gender-btn ${fm.g==='f'?'active':''}" style="flex:1;padding:10px 0;border-radius:12px;font-size:14px;font-weight:600;transition:all .2s;border:${fm.g==='f'?'2px':'1px'} solid ${fm.g==='f'?'var(--acc)':'var(--brd)'}!important;${fm.g==='f'?'background:var(--s2);color:var(--acc)':'color:var(--txd)'}" onclick="fm.g='f';render()">${t.gn.f}</button>
+    </div>
+    ${[{k:'age',l:t.age,mn:14,mx:80},{k:'wt',l:t.wt,mn:35,mx:200},{k:'ht',l:t.ht,mn:120,mx:220}].map(x=>`<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--txd);font-weight:500">${x.l}</span><span style="font-size:16px;font-weight:700;color:var(--acc);font-family:var(--serif)">${fm[x.k]}</span></div><input type="range" min="${x.mn}" max="${x.mx}" value="${fm[x.k]}" oninput="fm.${x.k}=+this.value;render()"></div>`).join('')}
+    <div style="font-size:12px;color:var(--txd);margin-bottom:8px;font-weight:500">${t.act.l}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">${actKeys.map(a=>`<button style="padding:8px 16px;border-radius:20px;font-size:12px;font-weight:${fm.act===a?600:400};background:${fm.act===a?'var(--acc2)':'transparent'};color:${fm.act===a?'#0A0A0E':'var(--txd)'};transition:all .25s" onclick="fm.act='${a}';render()">${t.act[a]}</button>`).join('')}</div>
+    <div style="font-size:12px;color:var(--txd);margin-bottom:8px;font-weight:500">${ln==='ru'?'Цель':'Goal'}</div>
+    <div style="display:flex;gap:8px;margin-bottom:20px">${glKeys.map(g=>`<button style="flex:1;padding:10px 0;border-radius:20px;font-size:12px;font-weight:${fm.gl===g?600:400};background:${fm.gl===g?glCols[g]:'transparent'};color:${fm.gl===g?'#0A0A0E':'var(--txd)'};transition:all .25s" onclick="fm.gl='${g}';render()">${t.gl[g]}</button>`).join('')}</div>
+    <button style="width:100%;padding:14px;border:none;border-radius:12px;background:var(--acc);color:#fff;font-size:15px;font-weight:700;font-family:var(--font);letter-spacing:.5px;cursor:pointer" onclick="doCalc()">${t.go}</button>
+  </div>
+  ${res?`<div class="card" style="margin-top:16px;animation:su .4s ease-out both">
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:11px;color:var(--txm);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">${t.dl}</div>
+      <div style="font-size:52px;font-weight:800;font-family:var(--serif);color:var(--acc);line-height:1">${res.kc}</div>
+      <div style="font-size:13px;color:var(--txd);margin-top:4px">${t.kc}</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      ${[{l:t.p,v:res.p,cl:'var(--acc3)'},{l:t.f,v:res.f,cl:'var(--acc)'},{l:t.c,v:res.c,cl:'var(--acc2)'}].map(x=>`<div style="flex:1;background:var(--s2);border-radius:14px;padding:14px 8px;text-align:center;border-top:3px solid ${x.cl}"><div style="font-size:22px;font-weight:700;font-family:var(--serif)">${x.v}<span style="font-size:12px;font-weight:400;color:var(--txd)">${t.g}</span></div><div style="font-size:10px;color:var(--txd);margin-top:4px;text-transform:uppercase;letter-spacing:1px">${x.l}</div></div>`).join('')}
+    </div>
+  </div>`:''}</div>`;
+}
+
+function doCalc(){
+  const{g,age,wt,ht,act,gl}=fm;
+  let bmr=g==='m'?10*wt+6.25*ht-5*age+5:10*wt+6.25*ht-5*age-161;
+  const m={sed:1.2,light:1.375,mod:1.55,high:1.725,ext:1.9};
+  let td=Math.round(bmr*m[act]);
+  let kc=gl==='lose'?td-400:gl==='gain'?td+350:td;
+  let p=gl==='gain'?Math.round(wt*2):gl==='lose'?Math.round(wt*1.8):Math.round(wt*1.5);
+  let f=Math.round(kc*.25/9);
+  let c=Math.round((kc-p*4-f*9)/4);
+  res={kc,p,f,c};render();
+}
+
+function renderFoodList(pg,t){
+  const mks=['bk','ln','dn','sn'];
+  pg.innerHTML=`<div class="fi" style="margin-top:12px">
+    <div style="display:flex;gap:6px;margin-bottom:16px;background:var(--s1);border-radius:14px;padding:4px">${mks.map(m=>`<button style="flex:1;padding:9px 0;border-radius:12px;font-size:11px;font-weight:${ml===m?700:400};background:${ml===m?'var(--s3)':'transparent'};color:${ml===m?'var(--tx)':'var(--txd)'};border:none;cursor:pointer;font-family:var(--font);transition:all .2s" onclick="ml='${m}';render()">${t.ms[m]}</button>`).join('')}</div>
+    <div style="display:flex;flex-direction:column;gap:12px">${R[ml].map((r,i)=>`<button style="background:var(--s1);border-radius:16px;overflow:hidden;display:flex;height:110px;border:none;border-bottom:1px solid var(--brd);text-align:left;width:100%;cursor:pointer;font-family:var(--font)" onclick="cr=${i};render()"><img src="${r.im}" style="width:120px;min-width:120px;height:100%;object-fit:cover"><div style="padding:12px 14px;display:flex;flex-direction:column;justify-content:center;flex:1;overflow:hidden"><div style="font-weight:600;font-size:14px;color:var(--tx);margin-bottom:6px;line-height:1.3">${r.n[ln]}</div><div style="display:flex;gap:8px;font-size:11px;color:var(--txd);flex-wrap:wrap"><span style="color:var(--acc);font-weight:600">${r.k} ${t.kc}</span><span>⏱ ${r.t}${t.tm}</span></div><div style="display:flex;gap:10px;font-size:10px;color:var(--txm);margin-top:4px"><span>Б:${r.p}${t.g}</span><span>Ж:${r.f}${t.g}</span><span>У:${r.c}${t.g}</span></div></div></button>`).join('')}</div></div>`;
+}
+
+function renderRecipeDetail(pg,t){
+  const r=R[ml][cr];
+  pg.innerHTML=`<div class="fi" style="margin-top:8px">
+    <button style="color:var(--acc);font-size:13px;padding:8px 0;display:flex;align-items:center;gap:6px;font-weight:500;border:none;background:none;cursor:pointer;font-family:var(--font)" onclick="cr=null;render()">${bk} ${t.ms[ml]}</button>
+    <div style="border-radius:18px;overflow:hidden;margin-bottom:14px"><img src="${r.im}" style="width:100%;height:200px;object-fit:cover"></div>
+    <h2 style="font-size:20px;font-weight:700;font-family:var(--serif);line-height:1.3;margin-bottom:8px">${r.n[ln]}</h2>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--brd);color:var(--acc);font-weight:500">${r.k} ${t.kc}</span>
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--brd);color:var(--txd);font-weight:500">⏱ ${r.t} ${t.tm}</span>
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--brd);color:var(--txd);font-weight:500">${t.sv} ${r.s}</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:18px">
+      ${[{l:t.p,v:r.p,cl:'var(--acc3)'},{l:t.f,v:r.f,cl:'var(--acc)'},{l:t.c,v:r.c,cl:'var(--acc2)'}].map(x=>`<div style="flex:1;background:var(--s1);border-radius:12px;padding:10px 6px;text-align:center;border-top:2px solid ${x.cl}"><div style="font-size:18px;font-weight:700">${x.v}<span style="font-size:11px;color:var(--txd)">${t.g}</span></div><div style="font-size:9px;color:var(--txd);text-transform:uppercase;letter-spacing:1px;margin-top:2px">${x.l}</div></div>`).join('')}
+    </div>
+    <div class="csm" style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc2);margin-bottom:10px;text-transform:uppercase;letter-spacing:1.5px">${t.ing}</div>
+      ${r.i[ln].map((x,i)=>`<div style="font-size:13px;color:var(--txd);padding:7px 0;${i<r.i[ln].length-1?'border-bottom:1px solid var(--brd)':''}">${x}</div>`).join('')}
+    </div>
+    <div class="csm">
+      <div style="font-size:11px;font-weight:700;color:var(--acc2);margin-bottom:10px;text-transform:uppercase;letter-spacing:1.5px">${t.hw}</div>
+      ${r.h[ln].map((x,i)=>`<div style="display:flex;gap:12px;margin-bottom:10px;align-items:flex-start"><div style="min-width:24px;height:24px;border-radius:12px;border:2px solid var(--acc);color:var(--acc);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${i+1}</div><div style="font-size:13px;color:var(--txd);line-height:1.5;padding-top:2px">${x}</div></div>`).join('')}
+    </div></div>`;
+}
+
+function renderTrainList(pg,t){
+  const gks=['lose','keep','gain'];
+  pg.innerHTML=`<div class="fi" style="margin-top:12px">
+    <div style="display:flex;gap:8px;margin-bottom:18px">${gks.map(g=>{const a=wg===g;return`<button style="flex:1;padding:10px 0;border-radius:12px;font-size:12px;font-weight:600;border:${a?'2px':'1px'} solid ${a?W[g].cl:'var(--brd)'}!important;color:${a?W[g].cl:'var(--txd)'};background:${a?W[g].cl+'15':'transparent'};cursor:pointer;font-family:var(--font);transition:all .25s" onclick="wg='${g}';render()">${W[g].ic} ${t.gs[g]}</button>`}).join('')}</div>
+    <div style="display:flex;flex-direction:column;gap:10px">${W[wg].ds.map((d,i)=>`<button style="background:var(--s1);border-radius:14px;padding:16px 18px;text-align:left;display:flex;justify-content:space-between;align-items:center;border-left:3px solid ${W[wg].cl};border:none;width:100%;cursor:pointer;font-family:var(--font);border-left:3px solid ${W[wg].cl}" onclick="wd=${i};render()"><div><div style="font-size:10px;color:${W[wg].cl};font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">${t.dy} ${d.d}</div><div style="font-weight:600;font-size:15px;margin-bottom:4px;color:var(--tx)">${d.n[ln]}</div><div style="font-size:11px;color:var(--txd);display:flex;gap:10px"><span>${d.du} ${ln==='ru'?'мин':'min'}</span><span style="color:${d.df==='h'?'var(--acc)':d.df==='m'?'var(--acc4)':'var(--acc2)'}">${t.df[d.df]}</span><span>${d.ex.length} ${t.ex}</span></div></div>${ch}</button>`).join('')}</div></div>`;
+}
+
+function renderDayDetail(pg,t){
+  const d=W[wg].ds[wd],cl=W[wg].cl;
+  pg.innerHTML=`<div class="fi" style="margin-top:8px">
+    <button style="color:var(--acc);font-size:13px;padding:8px 0;display:flex;align-items:center;gap:6px;font-weight:500;border:none;background:none;cursor:pointer;font-family:var(--font)" onclick="wd=null;render()">${bk} ${t.gs[wg]}</button>
+    <div style="background:linear-gradient(135deg,${cl}20,var(--s1));border-radius:18px;padding:20px;margin-bottom:14px;border-left:3px solid ${cl};border:1px solid var(--brd)">
+      <div style="font-size:10px;color:${cl};font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">${t.dy} ${d.d}</div>
+      <div style="font-size:22px;font-weight:700;font-family:var(--serif);margin-bottom:6px;line-height:1.2">${d.n[ln]}</div>
+      <div style="font-size:12px;color:var(--txd)">${d.du} ${ln==='ru'?'мин':'min'} · ${t.df[d.df]} · ${d.ex.length} ${t.ex}</div>
+    </div>
+    <div class="csm" style="margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc2);margin-bottom:10px;text-transform:uppercase;letter-spacing:1.5px">${t.wu}</div>
+      ${d.w[ln].map(x=>`<div style="font-size:13px;color:var(--txd);padding:5px 0">${x}</div>`).join('')}
+    </div>
+    <div class="csm" style="margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:${cl};margin-bottom:10px;text-transform:uppercase;letter-spacing:1.5px">${t.mn}</div>
+      ${d.ex.map((e,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;${i<d.ex.length-1?'border-bottom:1px solid var(--brd)':''}"><div style="flex:1"><div style="font-size:14px;font-weight:600;margin-bottom:2px">${e.n[ln]}</div><div style="font-size:11px;color:var(--txd)">${e.s} × ${e.r} ${typeof e.r==='number'?t.rp:''}</div></div><div style="font-size:10px;color:var(--txm);background:var(--s2);padding:4px 10px;border-radius:8px;white-space:nowrap">${t.rs} ${e.rs}${t.sc}</div></div>`).join('')}
+    </div>
+    <div class="csm">
+      <div style="font-size:11px;font-weight:700;color:var(--acc2);margin-bottom:10px;text-transform:uppercase;letter-spacing:1.5px">${t.cd}</div>
+      ${d.c[ln].map(x=>`<div style="font-size:13px;color:var(--txd);padding:5px 0">${x}</div>`).join('')}
+    </div></div>`;
+}
+
+render();
+</script>
+</body>
+</html>
