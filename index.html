@@ -132,8 +132,8 @@ function render(){
   // page
   const pg=document.getElementById('pg');
   if(tb==='calc')renderCalc(pg,t);
-  else if(tb==='food')cr?renderRecipeDetail(pg,t):renderFoodList(pg,t);
-  else if(tb==='train')wd?renderDayDetail(pg,t):renderTrainList(pg,t);
+  else if(tb==='food')cr!==null?renderRecipeDetail(pg,t):renderFoodList(pg,t);
+  else if(tb==='train')wd!==null?renderDayDetail(pg,t):renderTrainList(pg,t);
 }
 
 function renderCalc(pg,t){
